@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,11 +13,13 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "gravatar": "^1.8.0",
+    "jsonapi-serializer": "^3.6.4",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.4",
     "nodemon": "^1.18.9",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "validator": "^10.11.0"
-  }
+  },
+  "description": ""
 }

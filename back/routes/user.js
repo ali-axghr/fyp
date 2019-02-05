@@ -1,5 +1,5 @@
 // user.js
-
+const mongoose=require('mongoose');
 const express = require('express');
 const router = express.Router();
 const gravatar = require('gravatar');
@@ -103,6 +103,25 @@ router.post('/login', (req, res) => {
                     });
         });
 });
+
+router.get('/get/:id',(req,res)=>{
+    let id=req.params.id;
+    User.findOne({'_id': id, 'isDeleted': false}).then(user=>{
+        if(!user) return res.status(404).send({message:'user not found'});
+        else{
+            return res.status(200).json({
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                available: user.available,
+                isDeleted: user.isDeleted,
+                date: user.date
+            });
+        }
+    });
+});
+
 
 router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({

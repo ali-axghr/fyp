@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
+const validator=require('validator');
 const UserSchema=new Schema({
   name:{
     type:String,
@@ -8,7 +9,13 @@ const UserSchema=new Schema({
   },
   email:{
     type:String,
-    requires:true
+    required:true,
+    // unique:true,
+    // validate:{
+    //   validator:validator.isEmail,
+    //   message:'email is not valid',
+
+    // }
   },
   password:{
     type:String,
@@ -20,23 +27,22 @@ const UserSchema=new Schema({
   date:{
     type:Date,
     default:Date.now
-  }
+  },
+  available:{
+    type:Boolean,
+    default:false,   
+  },
+  isDeleted:{
+    type:Boolean,
+    default:false,   
+  },
+  deletedat:{
+   type:Date,
+  },
+  privacy:{
+   type:Boolean,
+   default:false,
+  },
 });
 const User=mongoose.model('users',UserSchema);
 module.exports=User;
-//
-// // User.js
-// const mongoose = require('mongoose');
-// const Schema = mongoose.Schema;
-// const UserSchema = new Schema({
-//
-//     avatar: {
-//         type: String
-//     },
-//     date: {
-//         type: Date,
-//         default: Date.now
-//     }
-// });
-// const User = mongoose.model('users', UserSchema);
-// module.exports = User;
