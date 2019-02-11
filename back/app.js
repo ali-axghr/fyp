@@ -7,6 +7,8 @@ const passport = require('passport');
 const config = require('./db');
 
 const users = require('./routes/user');
+const sports=require('./routes/sport');
+const teams=require('./routes/team');
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
     () => {console.log('Database is connected') },
@@ -21,7 +23,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/users', users);
-
+app.use('/api/sports',sports);
+app.use('/api/teams',teams);
 app.get('/', function(req, res) {
     res.send('hello');
 });

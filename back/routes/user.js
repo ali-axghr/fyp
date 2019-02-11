@@ -8,8 +8,11 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
+const _=require('lodash');
+
 
 const User = require('../models/User');
+const {Sport}=require('../models/Sport');
 
 router.post('/register', function(req, res) {
 
@@ -36,6 +39,7 @@ router.post('/register', function(req, res) {
                 name: req.body.name,
                 email: req.body.email,
                 password: req.body.password,
+                userName:req.body.userName,
                 avatar
             });
 
@@ -49,8 +53,8 @@ router.post('/register', function(req, res) {
                             newUser
                                 .save()
                                 .then(user => {
-                                    res.json(user)
-                                });
+                                    res.status(200).send(user);
+                                }).catch(e=>res.status(400).send(e));
                         }
                     });
                 }
@@ -106,22 +110,45 @@ router.post('/login', (req, res) => {
 
 router.get('/get/:id',(req,res)=>{
     let id=req.params.id;
-    User.findOne({'_id': id, 'isDeleted': false}).then(user=>{
-        if(!user) return res.status(404).send({message:'user not found'});
+    User.findById(id).then(user=>{
+        if(!user) {
+           // console.log('----------------',user);
+            return res.status(404).send({message:'user not found'});}
+        let isdel=user.isDeleted;
+        if(isdel) return res.status(404).send({message:'User is "Deleted". You have to Update for activation of Account'})
         else{
-            return res.status(200).json({
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                avatar: user.avatar,
-                available: user.available,
-                isDeleted: user.isDeleted,
-                date: user.date
-            });
+            return res.status(200).send(user);
         }
-    });
+    }).catch(err=>res.status(400).send(err));
 });
+router.put('/get/:id', async (req,res)=>{
+let id=req.params.id;
+var body=_.pick(req.body,['name','email','s_name','sports','userName','avatar','isDeleted','privacy','available','updatedAt']);
+    body.updatedAt=new Date().getTime();
+    body.isDeleted=false;
+    
+    User.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=>{
+        if(!user){
+          res.status(404).send({message:'user not found'});
+        }
+        res.status(200).send(user);
+      }).catch((e)=>{
+        res.status(400).send(e);
+      });
 
+});
+router.delete('/delete/:id',(req,res)=>{
+  let id=req.params.id;
+  let body=_.pick(req.body,['deletedAt','isDeleted']);
+  body.isDeleted=true;
+  body.deletedAt=new Date().getTime();
+  User.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=>{
+    if(!user)  res.status(404).send({message:'user not found'});
+    res.status(200).send({message:'Successfuly Delete'});
+      }).catch((e)=>{
+        res.status(400).send(e);
+      });
+  });
 
 router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({
@@ -132,3 +159,4 @@ router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) =
 });
 
 module.exports = router;
+
