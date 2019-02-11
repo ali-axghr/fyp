@@ -14,8 +14,15 @@ type:String,
 },
 sportImage:{
     data:Buffer,contentType:String,imageName:String,
-}
-
+},
+isDeleted:{
+type: Boolean,
+default:false,
+},
+deletedAt:{
+type:Date,
+default:null,
+},
 
 },
  {

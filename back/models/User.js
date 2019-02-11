@@ -55,10 +55,6 @@ const UserSchema=new Schema({
     type:Date,
     default:null,
   },
-  sports:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:'Sport'
-  }]
 });
 
 UserSchema.methods.toJSON=function(){

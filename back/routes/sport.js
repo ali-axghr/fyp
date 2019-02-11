@@ -40,7 +40,7 @@ router.post('/addSport',upload.single('sportImage'), function(req, res){
          }).catch(err=> res.status(400).send(err))
     
 });
-router.put('/get/:id',(req,res)=>{
+router.put('/update/:id',(req,res)=>{
     let id=req.params.id;
     var body=_.pick(req.body,['s_name','links']);
         // body.updatedAt=new Date().getTime();
@@ -55,6 +55,39 @@ router.put('/get/:id',(req,res)=>{
           });
     
     });
+    router.delete('/delete/:id',(req,res)=>{
+      let id=req.params.id;
+      let body=_.pick(req.body,['deletedAt','isDeleted']);
+      body.isDeleted=true;
+      body.deletedAt=new Date().getTime();
+      Sport.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=>{
+        if(!user)  res.status(404).send({message:'sport not found'});
+        res.status(200).send({message:'Successfuly Delete'});
+          }).catch((e)=>{
+            res.status(400).send(e);
+          });
+      });
+
+
+
+router.get('/get/:id',(req,res)=>{
+  let id=req.params.id;
+  Sport.findById(id).then(sport=>{
+      if(!sport) {
+          console.log('----------------',sport);
+          return res.status(404).send({message:'Sport not found'});}
+      let isdel=sport.isDeleted;
+      if(isdel) return res.status(404).send({message:'Sport is "Deleted".'})
+      else{
+          return res.status(200).send(sport);
+      }
+  }).catch(
+  err=>{  res.status(400).send(err)
+    // console.log('++++++++++++',err) 
+  }
+
+    );
+})
 
 
 

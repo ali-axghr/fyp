@@ -80,6 +80,9 @@ router.post('/login', (req, res) => {
                 errors.email = 'User not found'
                 return res.status(404).json(errors);
             }
+            let isdel=user.isDeleted;
+        if(isdel) return res.status(404).send({message:'User is "Deleted".'})
+        else{
             bcrypt.compare(password, user.password)
                     .then(isMatch => {
                         if(isMatch) {
@@ -105,6 +108,9 @@ router.post('/login', (req, res) => {
                             return res.status(400).json(errors);
                         }
                     });
+
+        }
+            
         });
 });
 
@@ -115,7 +121,7 @@ router.get('/get/:id',(req,res)=>{
            // console.log('----------------',user);
             return res.status(404).send({message:'user not found'});}
         let isdel=user.isDeleted;
-        if(isdel) return res.status(404).send({message:'User is "Deleted". You have to Update for activation of Account'})
+        if(isdel) return res.status(404).send({message:'User is "Deleted".'})
         else{
             return res.status(200).send(user);
         }
