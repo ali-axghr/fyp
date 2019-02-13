@@ -2,29 +2,53 @@
 const mongoose=require('mongoose');
 
 const EventSchema=new mongoose.Schema({
-    date:{
+    // date:{
+    //     type: Date,
+    //     required:true,
 
+    // },
+    location:{ 
+        type:String,
     },
-    location:{
-
+    // sport:{
+    //   type: String,
+    //   required:true,
+    // },
+    maker:{
+      type:String,
+      required:true,
     },
-    sport:{
-
-    },
-    name:{
-
+    eventName:{
+        type:String,
+        required:true,
     },
     status:{
-
+         type:Boolean,
+         default:false,
     },
     duration:{
-
+      type: Date,
     },
     description:{
+           type:String,
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+    },
+    deletedAt:{
+          type: Date,
 
     },
     result:{
-        
+      type:String,
+      enum:[true,false,'draw']  
     }
 
+},
+{
+   timestamps: true
 });
+
+const Events=mongoose.model('Events',EventSchema);
+module.exports={Events};

@@ -1,5 +1,5 @@
 // user.js
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const gravatar = require('gravatar');
@@ -8,23 +8,23 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const validateRegisterInput = require('../validation/register');
 const validateLoginInput = require('../validation/login');
-const _=require('lodash');
+const _ = require('lodash');
 
 
 const User = require('../models/User');
-const {Sport}=require('../models/Sport');
+const { Sport } = require('../models/Sport');
 
-router.post('/register', function(req, res) {
+router.post('/register', function (req, res) {
 
     const { errors, isValid } = validateRegisterInput(req.body);
 
-    if(!isValid) {
+    if (!isValid) {
         return res.status(400).json(errors);
     }
     User.findOne({
         email: req.body.email
     }).then(user => {
-        if(user) {
+        if (user) {
             return res.status(400).json({
                 email: 'Email already exists'
             });
@@ -39,22 +39,22 @@ router.post('/register', function(req, res) {
                 name: req.body.name,
                 email: req.body.email,
                 password: req.body.password,
-                userName:req.body.userName,
+                userName: req.body.userName,
                 avatar
             });
 
             bcrypt.genSalt(10, (err, salt) => {
-                if(err) console.error('There was an error', err);
+                if (err) console.error('There was an error', err);
                 else {
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if(err) console.error('There was an error', err);
+                        if (err) console.error('There was an error', err);
                         else {
                             newUser.password = hash;
                             newUser
                                 .save()
                                 .then(user => {
                                     res.status(200).send(user);
-                                }).catch(e=>res.status(400).send(e));
+                                }).catch(e => res.status(400).send(e));
                         }
                     });
                 }
@@ -67,25 +67,25 @@ router.post('/login', (req, res) => {
 
     const { errors, isValid } = validateLoginInput(req.body);
 
-    if(!isValid) {
+    if (!isValid) {
         return res.status(400).json(errors);
     }
 
     const email = req.body.email;
     const password = req.body.password;
 
-    User.findOne({email})
+    User.findOne({ email })
         .then(user => {
-            if(!user) {
+            if (!user) {
                 errors.email = 'User not found'
                 return res.status(404).json(errors);
             }
-            let isdel=user.isDeleted;
-        if(isdel) return res.status(404).send({message:'User is "Deleted".'})
-        else{
-            bcrypt.compare(password, user.password)
+            let isdel = user.isDeleted;
+            if (isdel) return res.status(404).send({ message: 'User is "Deleted".' })
+            else {
+                bcrypt.compare(password, user.password)
                     .then(isMatch => {
-                        if(isMatch) {
+                        if (isMatch) {
                             const payload = {
                                 id: user.id,
                                 name: user.name,
@@ -94,7 +94,7 @@ router.post('/login', (req, res) => {
                             jwt.sign(payload, 'secret', {
                                 expiresIn: 3600
                             }, (err, token) => {
-                                if(err) console.error('There is some error in token', err);
+                                if (err) console.error('There is some error in token', err);
                                 else {
                                     res.json({
                                         success: true,
@@ -109,52 +109,53 @@ router.post('/login', (req, res) => {
                         }
                     });
 
-        }
-            
+            }
+
         });
 });
 
-router.get('/get/:id',(req,res)=>{
-    let id=req.params.id;
-    User.findById(id).then(user=>{
-        if(!user) {
-           // console.log('----------------',user);
-            return res.status(404).send({message:'user not found'});}
-        let isdel=user.isDeleted;
-        if(isdel) return res.status(404).send({message:'User is "Deleted".'})
-        else{
+router.get('/get/:id', (req, res) => {
+    let id = req.params.id;
+    User.findById(id).then(user => {
+        if (!user) {
+            // console.log('----------------',user);
+            return res.status(404).send({ message: 'user not found' });
+        }
+        let isdel = user.isDeleted;
+        if (isdel) return res.status(404).send({ message: 'User is "Deleted".' })
+        else {
             return res.status(200).send(user);
         }
-    }).catch(err=>res.status(400).send(err));
+    }).catch(err => res.status(400).send(err));
 });
-router.put('/get/:id', async (req,res)=>{
-let id=req.params.id;
-var body=_.pick(req.body,['name','email','s_name','sports','userName','avatar','isDeleted','privacy','available','updatedAt']);
-    body.updatedAt=new Date().getTime();
-    body.isDeleted=false;
-    
-    User.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=>{
-        if(!user){
-          res.status(404).send({message:'user not found'});
+router.put('/get/:id', async (req, res) => {
+    let id = req.params.id;
+    var body = _.pick(req.body, ['name', 'email', 's_name', 'sports', 'userName', 'avatar', 'isDeleted', 'privacy', 'available', 'updatedAt']);
+    body.updatedAt = new Date().getTime();
+    body.isDeleted = false;
+
+    User.findByIdAndUpdate(id, { $set: body }, { new: true }).then((user) => {
+        if (!user) {
+            res.status(404).send({ message: 'user not found' });
         }
         res.status(200).send(user);
-      }).catch((e)=>{
+    }).catch((e) => {
         res.status(400).send(e);
-      });
+    });
 
 });
-router.delete('/delete/:id',(req,res)=>{
-  let id=req.params.id;
-  let body=_.pick(req.body,['deletedAt','isDeleted']);
-  body.isDeleted=true;
-  body.deletedAt=new Date().getTime();
-  User.findByIdAndUpdate(id,{$set:body},{new:true}).then((user)=>{
-    if(!user)  res.status(404).send({message:'user not found'});
-    res.status(200).send({message:'Successfuly Delete'});
-      }).catch((e)=>{
+router.delete('/delete/:id', (req, res) => {
+    let id = req.params.id;
+    let body = _.pick(req.body, ['deletedAt', 'isDeleted']);
+    body.isDeleted = true;
+    body.deletedAt = new Date().getTime();
+    User.findByIdAndUpdate(id, { $set: body }, { new: true }).then((user) => {
+        if (!user) res.status(404).send({ message: 'user not found' });
+        res.status(200).send({ message: 'Successfuly Delete' });
+    }).catch((e) => {
         res.status(400).send(e);
-      });
-  });
+    });
+});
 
 router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({

@@ -1,19 +1,18 @@
-///  Sport Model
-
 const mongoose=require('mongoose');
 const validator=require('validator');
 
-const sportSchema=new mongoose.Schema({
-sportName:{
+const Schema=new mongoose.Schema({
+status:{
 type:String,
 required:true,
-unique:true
 },
-links:{
+from:{
 type:String,
+required:true
 },
-sportImage:{
-    data:Buffer,contentType:String,imageName:String,
+to:{
+type:String,
+required:true,
 },
 isDeleted:{
 type: Boolean,
@@ -29,5 +28,5 @@ default:null,
     timestamps: true
 });
 
-var Sport=mongoose.model('sport',sportSchema);
-module.exports={Sport};
+var Notification=mongoose.model('Notification',Schema);
+module.exports={Notification};

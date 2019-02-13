@@ -6,7 +6,7 @@ const _=require('lodash');
 const UserSchema=new Schema({
   name:{
     type:String,
-    required:true
+   // required:true
 
   },
   userName:{
