@@ -19,10 +19,10 @@ var storage = multer.diskStorage({
    
   var upload = multer({ storage: storage })
 
-router.post('/addSport',upload.single('sportImage'), function(req, res){
+router.post('/add',upload.single('sportImage'), function(req, res){
     // console.log(req.file);
     const newSport = new Sport;
-        newSport.s_name=req.body.s_name;
+        newSport.sportName=req.body.sportName;
          newSport.links=req.body.links;
          let buff=fs.readFileSync(req.file.path);
          newSport.sportImage.data=buff.toString('base64')

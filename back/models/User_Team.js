@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
-    sport: [{
+    team: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Sport",
-        required: 'Sport is required',
+        ref: "Team",
+        // required: true,
     }],
     user: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            //required:true
         }
     ]
 
@@ -19,5 +18,5 @@ const schema = new mongoose.Schema({
    timestamps: true
 })
 
-let User_Sport = mongoose.model('User_Sport', schema);
-module.exports = { User_Sport };
+let User_Team = mongoose.model('User_Team', schema);
+module.exports = { User_Team };
