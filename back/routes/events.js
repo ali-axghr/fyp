@@ -1,28 +1,29 @@
 const {Events}=require('../models/Events');
-const multer = require('multer');
+// const multer = require('multer');
 const express = require('express');
 const router = express.Router();
 const fs=require('fs');
 const _=require('lodash');
 
 
-/// Set Storage
-
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './uploads/')
-    },
-    filename: function (req, file, cb) {
-      cb(null, new Date().toISOString()+file.originalname);
-    }
-  })
-   
-  var upload = multer({ storage: storage })
-
-  ////////////  Set Storage
+// /// Set Storage
+//
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './uploads/')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, new Date().toISOString()+file.originalname);
+//     }
+//   })
+//
+//   var upload = multer({ storage: storage })
+//
+//   ////////////  Set Storage
 
   router.post('/add' /* , upload.single('eventImage')  */  , function(req, res){
     const newEvent = new Events;
+    newEvent.date=req.body.date;
   newEvent.eventName = req.body.eventName;
   newEvent.location = req.body.location;
   newEvent.discription = req.body.discription;
@@ -43,15 +44,15 @@ var storage = multer.diskStorage({
     res.status(200).send(event);
   }).catch(err => res.status(400).send(err))
 
-    
+
 });
 
 ///////////// Update teh Event
 
 router.put('/update/:id',(req,res)=>{
-   
+
   let id = req.params.id;
-  var body = _.pick(req.body, ['eventName', 'location', 'maker','status','duration','description','result']);
+  var body = _.pick(req.body, ['date','eventName', 'location', 'maker','status','duration','description','result']);
   // body.updatedAt=new Date().getTime();
 
   Events.findByIdAndUpdate(id, { $set: body }, { new: true }).then((event) => {
@@ -66,10 +67,10 @@ router.put('/update/:id',(req,res)=>{
 
 
 
-    
+
     });
 
-    /////////////////////// Delete Route 
+    /////////////////////// Delete Route
 
     router.delete('/delete/:id',(req,res)=>{
 
@@ -83,17 +84,17 @@ router.put('/update/:id',(req,res)=>{
           }).catch((e)=>{
             res.status(400).send(e);
           });
-      
+
       });
-    
-      /////////////////////////// Get Route 
+
+      /////////////////////////// Get Route
 
       router.get('/get/:id',(req,res)=>{
         let id=req.params.id;
         Events.findById(id).then(event=>{
-            if(!event) { 
+            if(!event) {
                 return res.status(404).send({message:'Event not found'});}
-                
+
             let isdel=event.isDeleted;
             if(isdel) return res.status(404).send({message:'Event is "Deleted".'})
             else{
@@ -101,9 +102,9 @@ router.put('/update/:id',(req,res)=>{
             }
         }).catch(
         err=>{  res.status(400).send(err)
-          // console.log('++++++++++++',err) 
+          // console.log('++++++++++++',err)
         }
-      
+
           );
 
 

@@ -10,6 +10,12 @@ user:{
 type:String,
 required:true
 },
+teamPostImage:{
+  data:Buffer,
+  contentType:String,
+  imageName:String,
+
+},
 team:{
 type:String,
 required:true,

@@ -6,7 +6,7 @@ const _=require('lodash');
 const UserSchema=new Schema({
   name:{
     type:String,
-   // required:true
+    required:true
 
   },
   userName:{
@@ -55,6 +55,11 @@ const UserSchema=new Schema({
     type:Date,
     default:null,
   },
+  sport: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Sport",
+    // required: 'Sport is required',
+}]
 });
 
 UserSchema.methods.toJSON=function(){

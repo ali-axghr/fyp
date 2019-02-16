@@ -1,5 +1,7 @@
+// Sport.js 
+
 const {Sport}=require('../models/Sport');
-const multer = require('multer');
+// const multer = require('multer');
 const express = require('express');
 const router = express.Router();
 const fs=require('fs');
@@ -7,44 +9,44 @@ const _=require('lodash');
 
 
 /// Set Storage
+//
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './uploads/')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, new Date().toISOString()+file.originalname);
+//     }
+//   })
+//
+//   var upload = multer({ storage: storage })
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './uploads/')
-    },
-    filename: function (req, file, cb) {
-      cb(null, new Date().toISOString()+file.originalname);
-    }
-  })
-   
-  var upload = multer({ storage: storage })
-
-router.post('/add',upload.single('sportImage'), function(req, res){
+router.post('/add',/*upload.single('sportImage'),*/ function(req, res){
     // console.log(req.file);
     const newSport = new Sport;
         newSport.sportName=req.body.sportName;
-         newSport.links=req.body.links;
-         let buff=fs.readFileSync(req.file.path);
-         newSport.sportImage.data=buff.toString('base64')
-         newSport.sportImage.contentType=req.file.mimetype;
-         newSport.sportImage.imageName=req.file.filename;
-        
+         // newSport.links=req.body.links;
+         // let buff=fs.readFileSync(req.file.path);
+         newSport.sportImage.data=req.body.data;
+         newSport.sportImage.contentType=req.body.contentType;
+         newSport.sportImage.imageName=req.body.fileName;
 
-        
-//    let buff = fs.readFileSync('stack-abuse-logo.png');  
+
+
+//    let buff = fs.readFileSync('stack-abuse-logo.png');
 //      let base64data = buff.toString('base64');
 
          ////////////////
          newSport.save().then(sprt=>{
              res.status(200).send(sprt);
          }).catch(err=> res.status(400).send(err))
-    
+
 });
 router.put('/update/:id',(req,res)=>{
     let id=req.params.id;
-    var body=_.pick(req.body,['s_name','links']);
+    var body=_.pick(req.body,['sportName','links','data','contentType','fileName']);
         // body.updatedAt=new Date().getTime();
-        
+
         Sport.findByIdAndUpdate(id,{$set:body},{new:true}).then((sprt)=>{
             if(!sprt){
               res.status(404).send({message:'Sport not found'});
@@ -53,7 +55,7 @@ router.put('/update/:id',(req,res)=>{
           }).catch((e)=>{
             res.status(400).send(e);
           });
-    
+
     });
     router.delete('/delete/:id',(req,res)=>{
       let id=req.params.id;
@@ -83,7 +85,7 @@ router.get('/get/:id',(req,res)=>{
       }
   }).catch(
   err=>{  res.status(400).send(err)
-    // console.log('++++++++++++',err) 
+    // console.log('++++++++++++',err)
   }
 
     );

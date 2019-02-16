@@ -1,19 +1,19 @@
-// Date,location,sport,name,status,duration,descriptoin ,result 
+// Date,location,sport,name,status,duration,descriptoin ,result
 const mongoose=require('mongoose');
 
 const EventSchema=new mongoose.Schema({
-    // date:{
-    //     type: Date,
-    //     required:true,
+    date:{
+        type: Date,
+      //  required:true,
 
-    // },
-    location:{ 
+    },
+    location:{
         type:String,
     },
-    // sport:{
-    //   type: String,
-    //   required:true,
-    // },
+    sport:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Sport"
+    },
     maker:{
       type:String,
       required:true,
@@ -42,7 +42,7 @@ const EventSchema=new mongoose.Schema({
     },
     result:{
       type:String,
-      enum:[true,false,'draw']  
+      enum:[true,false,'draw']
     }
 
 },

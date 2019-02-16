@@ -130,14 +130,17 @@ router.get('/get/:id', (req, res) => {
 });
 router.put('/get/:id', async (req, res) => {
     let id = req.params.id;
-    var body = _.pick(req.body, ['name', 'email', 's_name', 'sports', 'userName', 'avatar', 'isDeleted', 'privacy', 'available', 'updatedAt']);
+    let sid=req.params.id;
+    var body = _.pick(req.body, ['name', 'email','avatar', 's_name', 'sport', 'userName', 'avatar', 'isDeleted', 'privacy', 'available', 'updatedAt']);
     body.updatedAt = new Date().getTime();
     body.isDeleted = false;
+  
+    //   body.sport.push('sid');
 
-    User.findByIdAndUpdate(id, { $set: body }, { new: true }).then((user) => {
+     User.findByIdAndUpdate(id, { $set: body }, { new: true }).then( (user) => {
         if (!user) {
             res.status(404).send({ message: 'user not found' });
-        }
+        } 
         res.status(200).send(user);
     }).catch((e) => {
         res.status(400).send(e);

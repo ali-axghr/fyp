@@ -4,31 +4,31 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const _ = require('lodash');
+//
+// // Set Storage
+//
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, './uploads/')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, new Date().toISOString() + file.originalname);
+//   }
+// })
+//
+// var upload = multer({ storage: storage })
 
-// Set Storage
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, new Date().toISOString() + file.originalname);
-  }
-})
-
-var upload = multer({ storage: storage })
-
-router.post('/add', upload.single('teamImage'), (req, res) => {
+router.post('/add'/*, upload.single('teamImage')*/, (req, res) => {
   // console.log(req.file);
 
   const newTeam = new Team;
   newTeam.teamName = req.body.teamName;
   newTeam.captain = req.body.captain;
   newTeam.discription = req.body.discription;
-  let buff = fs.readFileSync(req.file.path);
-  newTeam.teamImage.data = buff.toString('base64')
-  newTeam.teamImage.contentType = req.file.mimetype;
-  newTeam.teamImage.imageName = req.file.filename;
+  // let buff = fs.readFileSync(req.file.path);
+  newTeam.teamImage.data = req.body.data;
+  newTeam.teamImage.contentType = req.body.contentType;
+  newTeam.teamImage.imageName = req.body.imageName;
   ////////////////
   newTeam.save().then(team => {
     res.status(200).send(team);
@@ -66,7 +66,7 @@ router.get('/get/:id', (req, res) => {
   }).catch(
     err => {
       res.status(400).send(err)
-      // console.log('++++++++++++',err) 
+      // console.log('++++++++++++',err)
     }
 
   );
@@ -85,7 +85,3 @@ router.delete('/delete/:id', (req, res) => {
 });
 
 module.exports = router;
-
-
-
-

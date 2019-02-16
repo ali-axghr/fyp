@@ -1,23 +1,23 @@
 const {TeamPosts}=require('../models/TeamPost');
-const multer = require('multer');
+// const multer = require('multer');
 const express = require('express');
 const router = express.Router();
 const fs=require('fs');
 const _=require('lodash');
 
-
-/// Set Storage
-
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './uploads/')
-    },
-    filename: function (req, file, cb) {
-      cb(null, new Date().toISOString()+file.originalname);
-    }
-  })
-   
-  var upload = multer({ storage: storage })
+//
+// /// Set Storage
+//
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './uploads/')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, new Date().toISOString()+file.originalname);
+//     }
+//   })
+//
+//   var upload = multer({ storage: storage })
 
   ////////////  Set Storage
   router.post('/add' /* , upload.single('eventImage')  */  , function(req, res){
@@ -35,13 +35,13 @@ var storage = multer.diskStorage({
     res.status(200).send(posts);
   }).catch(err => res.status(400).send(err))
 
-    
+
 });
 
 ///////////// Update teh Event
 
 router.put('/update/:id',(req,res)=>{
-   
+
   let id = req.params.id;
   var body = _.pick(req.body, ['status', 'to', 'from']);
   // body.updatedAt=new Date().getTime();
@@ -58,10 +58,10 @@ router.put('/update/:id',(req,res)=>{
 
 
 
-    
+
     });
 
-    /////////////////////// Delete Route 
+    /////////////////////// Delete Route
 
     router.delete('/delete/:id',(req,res)=>{
 
@@ -75,17 +75,17 @@ router.put('/update/:id',(req,res)=>{
           }).catch((e)=>{
             res.status(400).send(e);
           });
-      
+
       });
-    
-      /////////////////////////// Get Route 
+
+      /////////////////////////// Get Route
 
       router.get('/get/:id',(req,res)=>{
         let id=req.params.id;
         TeamPosts.findById(id).then(note=>{
-            if(!note) { 
+            if(!note) {
                 return res.status(404).send({message:'team post not found'});}
-                
+
             let isdel=note.isDeleted;
             if(isdel) return res.status(404).send({message:'post is "Deleted".'})
             else{
@@ -93,9 +93,9 @@ router.put('/update/:id',(req,res)=>{
             }
         }).catch(
         err=>{  res.status(400).send(err)
-          // console.log('++++++++++++',err) 
+          // console.log('++++++++++++',err)
         }
-      
+
           );
 
 

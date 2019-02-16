@@ -13,7 +13,9 @@ links:{
 type:String,
 },
 sportImage:{
-    data:Buffer,contentType:String,imageName:String,
+    data:Buffer,
+    contentType:String,
+    imageName:String,
 },
 isDeleted:{
 type: Boolean,
@@ -23,6 +25,13 @@ deletedAt:{
 type:Date,
 default:null,
 },
+user: [
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        //required:true
+    }
+]
 
 },
  {
