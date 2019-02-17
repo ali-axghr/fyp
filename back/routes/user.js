@@ -134,13 +134,19 @@ router.put('/get/:id', async (req, res) => {
     var body = _.pick(req.body, ['name', 'email','avatar', 's_name', 'sport', 'userName', 'avatar', 'isDeleted', 'privacy', 'available', 'updatedAt']);
     body.updatedAt = new Date().getTime();
     body.isDeleted = false;
-  
-    //   body.sport.push('sid');
 
-     User.findByIdAndUpdate(id, { $set: body }, { new: true }).then( (user) => {
+     User.findByIdAndUpdate(id, { $set: body }, { new: true }).then( async (user) => {
         if (!user) {
             res.status(404).send({ message: 'user not found' });
-        } 
+        }
+        await Sport.findOne({sportName:req.body.sportName}).then((usr)=>{
+
+          user.sport.push(usr._id);
+          // console.log('+++++==========',usr);
+          user.save().then(done=>console.log('----------------------',done));
+          usr.user.push(user._id);
+          usr.save().then(done=>console.log('+++++++++++++++++',done));
+        }).catch(e=> res.status(400).send({message:'error at sportname'}));
         res.status(200).send(user);
     }).catch((e) => {
         res.status(400).send(e);
@@ -169,4 +175,3 @@ router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) =
 });
 
 module.exports = router;
-

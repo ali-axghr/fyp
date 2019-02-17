@@ -1,4 +1,4 @@
-// Sport.js 
+// Sport.js
 
 const {Sport}=require('../models/Sport');
 // const multer = require('multer');
@@ -29,7 +29,7 @@ router.post('/add',/*upload.single('sportImage'),*/ function(req, res){
          // let buff=fs.readFileSync(req.file.path);
          newSport.sportImage.data=req.body.data;
          newSport.sportImage.contentType=req.body.contentType;
-         newSport.sportImage.imageName=req.body.fileName;
+         newSport.sportImage.imageName=req.body.ImageName;
 
 
 
@@ -42,6 +42,8 @@ router.post('/add',/*upload.single('sportImage'),*/ function(req, res){
          }).catch(err=> res.status(400).send(err))
 
 });
+
+
 router.put('/update/:id',(req,res)=>{
     let id=req.params.id;
     var body=_.pick(req.body,['sportName','links','data','contentType','fileName']);
@@ -70,7 +72,12 @@ router.put('/update/:id',(req,res)=>{
           });
       });
 
-
+router.get('/getall',(req,res)=>{
+  Sport.find().then(sport=>{
+    if(!sport) res.status(404).send({message:'sport not found'})
+    res.status(200).send(sport);
+  }).catch(err=>res.status(400).send(err));
+});
 
 router.get('/get/:id',(req,res)=>{
   let id=req.params.id;

@@ -32,7 +32,7 @@ for Sport table routes
 ////////////
 
 1 api / sports / add
-method: POST    Discription: register the user
+method: POST    Discription: add the sport
 required::: SportName
 
 2 api / sports / get /: id
