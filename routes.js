@@ -2,7 +2,7 @@ for user table routes
 
 1 api / users / register
 method: POST    Discription: register the user
-required::: name, userName, password, confirm_password, email
+required::: name, userName, password, confirm_password, email , admin
 
 2 api / users / login
 method: POST    Discription: login the user
@@ -31,8 +31,8 @@ for Sport table routes
 
 ////////////
 
-1 api / sports / add
-method: POST    Discription: add the sport
+1 api / sports / add /:id
+method: POST    Discription: add the sport ::::::: provide the user id 
 required::: SportName
 
 2 api / sports / get /: id
