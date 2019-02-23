@@ -13,14 +13,13 @@ const teams=require('./routes/team');
 const events=require('./routes/events');
 const notification=require('./routes/notification');
 const teampost=require('./routes/teampost');
+const chats=require('./routes/chat');
+
 ////////////
 const usersports=require('./routes/user_sport');
 const userteams=require('./routes/user_team');
 
 // const events=require('./routes/events');
-
-
-
 
 mongoose.connect(config.DB, { useNewUrlParser: true }).then(
     () => {console.log('Database is connected') },
@@ -42,6 +41,7 @@ app.use('/api/notification',notification);
 app.use('/api/events',events);
 app.use('/api/usersport',usersports);
 app.use('/api/userteam',userteams);
+app.use('/api/chat',chats);
 
 app.get('/', function(req, res) {
     res.send('hello');

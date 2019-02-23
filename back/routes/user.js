@@ -81,7 +81,7 @@ router.post('/login', (req, res) => {
                 return res.status(404).json(errors);
             }
             let isdel = user.isDeleted;
-            if (isdel) return res.status(404).send({ message: 'User is "Deleted".' })
+            if (isdel) return res.status(404).send({ message: 'User is "Deleted" . Contact to the admin for reActivations' })
             else {
                 bcrypt.compare(password, user.password)
                     .then(isMatch => {
@@ -116,7 +116,7 @@ router.post('/login', (req, res) => {
 
 router.get('/get/:id', (req, res) => {
     let id = req.params.id;
-    User.findById(id).then(user => {
+    User.findById(id)/*.populate('Sport')*/.then(user => {
         if (!user) {
             // console.log('----------------',user);
             return res.status(404).send({ message: 'user not found' });
@@ -143,9 +143,9 @@ router.put('/get/:id', async (req, res) => {
 
           user.sport.push(usr._id);
           // console.log('+++++==========',usr);
-          user.save().then(done=>console.log('----------------------',done));
+         user.save().then(done=>console.log('----------------------',done));
           usr.user.push(user._id);
-          usr.save().then(done=>console.log('+++++++++++++++++',done));
+         usr.save().then(done=>console.log('+++++++++++++++++',done));
         }).catch(e=> res.status(400).send({message:'error at sportname'}));
         res.status(200).send(user);
     }).catch((e) => {
@@ -165,6 +165,7 @@ router.delete('/delete/:id', (req, res) => {
         res.status(400).send(e);
     });
 });
+
 
 router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
     return res.json({

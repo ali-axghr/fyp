@@ -1,6 +1,7 @@
 // Sport.js
 
 const {Sport}=require('../models/Sport');
+const User=require('../models/User');
 // const multer = require('multer');
 const express = require('express');
 const router = express.Router();
@@ -8,38 +9,27 @@ const fs=require('fs');
 const _=require('lodash');
 
 
-/// Set Storage
-//
-// var storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, './uploads/')
-//     },
-//     filename: function (req, file, cb) {
-//       cb(null, new Date().toISOString()+file.originalname);
-//     }
-//   })
-//
-//   var upload = multer({ storage: storage })
 
-router.post('/add',/*upload.single('sportImage'),*/ function(req, res){
-    // console.log(req.file);
+router.post('/add/:id', function(req, res){
+    let id=req.params.id;
     const newSport = new Sport;
+    User.findById(id).then(user=>{
+      if(user.admin){
         newSport.sportName=req.body.sportName;
-         // newSport.links=req.body.links;
-         // let buff=fs.readFileSync(req.file.path);
+
          newSport.sportImage.data=req.body.data;
          newSport.sportImage.contentType=req.body.contentType;
          newSport.sportImage.imageName=req.body.ImageName;
 
-
-
-//    let buff = fs.readFileSync('stack-abuse-logo.png');
-//      let base64data = buff.toString('base64');
-
-         ////////////////
          newSport.save().then(sprt=>{
              res.status(200).send(sprt);
          }).catch(err=> res.status(400).send(err))
+      }
+      else {
+        res.status(400).send({message:'Not Authorized'})
+      }
+    });
+
 
 });
 

@@ -28,6 +28,15 @@ const TeamSchema = new mongoose.Schema({
     type:Date,
     default:null,
     },
+    sport: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Sport",
+      // required: 'Sport is required',
+  },
+  user:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"User",
+  }
 },
     {
         timestamps: true

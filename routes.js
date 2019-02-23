@@ -47,6 +47,9 @@ required::: id
 method: Delete   Discription: Delete a delete a sport
 required: id
 
+5 api/sports/getall
+method :get     discription: Get all the sports
+
 /////////////
 
 
@@ -124,7 +127,7 @@ required: id
 
 
 
-for Team table routes
+for Team Post table routes
 
  list of attributes ::: message,user,team, ,teamPostImage (data, contentType ,imageName), isDeleted , deletedAt
 
@@ -142,6 +145,34 @@ required::: id
 
 4  api / teamPost / delete /:id
 method: Delete   Discription: Delete a delete a sport
+required: id
+
+
+///////////////
+
+
+
+///////////////
+
+
+for Notification table routes
+
+ list of attributes ::: status ,from ,to, message , isDeleted , deletedAt
+
+1 api / chat / add
+method: POST    Discription: Create the message0
+required::: from , to
+
+2 api / chat / get /: id
+method: GET    Discription: get  the messaeg
+required: id
+
+3 api / chat / update /: id
+method: PUT    Discription: update the message
+required::: id
+
+4  api / chat / delete /:id
+method: Delete   Discription: Delete a delete a message
 required: id
 
 
