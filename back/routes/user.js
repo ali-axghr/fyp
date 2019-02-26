@@ -175,4 +175,11 @@ router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) =
     });
 });
 
+router.get('/getall',(req,res)=>{
+  User.find().then(usr=>{
+    if(!usr) res.status(404).send({message:'user not found'});
+    res.status(200).send(usr);
+  })
+})
+
 module.exports = router;

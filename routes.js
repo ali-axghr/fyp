@@ -23,6 +23,9 @@ required: id
 6 - api / users / me
 method: get  Discription   authenticate the user
 
+7- api/users /getall
+method :get Discription     get all users
+
 
 ///////////////////
 for Sport table routes
@@ -32,7 +35,7 @@ for Sport table routes
 ////////////
 
 1 api / sports / add /:id
-method: POST    Discription: add the sport ::::::: provide the user id 
+method: POST    Discription: add the sport ::::::: provide the user id
 required::: SportName
 
 2 api / sports / get /: id
